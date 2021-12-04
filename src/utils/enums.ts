@@ -1,0 +1,5 @@
+export enum TaskFlag {
+	ACTIVE = 'ACTIVE',
+	FINISHED = 'FINISHED',
+	CANCELED = 'CANCELED'
+}
