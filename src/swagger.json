@@ -124,10 +124,7 @@
                         "content": {
                             "application/json":{
                                 "schema":{
-                                    "type": "array",
-                                    "items":{
-                                        "$ref": "#/definitions/List"
-                                    }
+                                    "$ref": "#/definitions/List"
                                 }
                             }  
                         }

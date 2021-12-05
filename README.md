@@ -21,3 +21,7 @@ JWTACCESS=JWTSECRET
 ```
 
 Your app should now be running on [localhost:5000](http://localhost:5000/).
+
+## API documentation
+
+Visit http://localhost:5000/swagger
