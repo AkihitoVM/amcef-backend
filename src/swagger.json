@@ -1,0 +1,457 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "AMCEF Backend",
+        "description": "API",
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "tags": [
+        {
+            "name": "Users",
+            "description": "API for Users in the system"
+        },
+        {
+            "name": "Lists",
+            "description": "API for lists in the system"
+        },
+        {
+            "name": "Todos",
+            "description": "API for todos in the system"
+        }
+    ],
+    "paths": {
+        "/auth/signup": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Create a new user in system",
+                "operationId": "addUser",
+                "description": "Adds new user to the system",
+                "requestBody": {
+                    "description": "User Object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/User"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully registered"
+                    },
+                    "403": {
+                        "description": "User already exist"
+                    },
+                    "400":{
+                        "description": "Validation object result"
+                    }
+                }
+            }
+        },
+        "/auth/signin": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "LogIn in system",
+                "description": "Authentication in system",
+                "requestBody": {
+                    "description": "User Object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/User"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "#/components/schemas/LoginResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "description": "Validation object result"
+                    }
+                }
+            }
+        },
+        "/list/create":{
+            "post": {
+                "tags": [
+                    "Lists"
+                ],
+                "summary": "Create new List object",
+                "description": "Create new List and assign to authenticated user",
+                "requestBody": {
+                    "description": "List Object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/List"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type": "array",
+                                    "items":{
+                                        "$ref": "#/definitions/List"
+                                    }
+                                }
+                            }  
+                        }
+                    },
+                    "400": {
+                        "description": "Validation Object. Failed. Bad post data."
+                    }
+                }
+            }
+        },
+        "/list/all":{
+            "get":{
+                "tags": ["Lists"],
+                "summary": "Get all lists given user",
+                "description": "Get all lists from  authenticated user",
+                "responses": {
+                    "200":{
+                        "description": "Array of lists from given user",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "$ref": "#/components/schemas/UserLists"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/list/{listId}":{
+            "parameters": [
+                {
+                    "name": "listId",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of the list that we want to get"
+                }
+            ],
+            "get":{
+                "tags": ["Lists"],
+                "summary": "Get all todos from given List",
+                "description": "Get all todos from given List via authenticated user",
+                "responses": {
+                    "200":{
+                        "description": "Array of  todos from list",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "type":"array",
+                                    "items":{
+                                        "$ref":"#/components/schemas/List"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500":{
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
+        "/list/access/{listId}/{userId}":{
+            "parameters": [
+                {
+                    "name": "listId",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of the list that we want to give to another user"
+                },
+                {
+                    "name": "userId",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of the user that we give access"
+                }
+            ],
+            "patch":{
+                "tags": ["Lists"],
+                "summary": "Give access to my list to another user",
+                "description": "Give access to my list to another user",
+                "responses": {
+                    "200":{
+                        "description": "User with id=2 was successfully added to your list id=1"
+                    },
+                    "403":{
+                        "description": "A token is required for authentication"
+                    },
+                    "500":{
+                        "description": "Internal Error"
+                    }
+                }
+            }
+        },
+        "/todo/create/{listId}":{
+            "parameters": [
+                {
+                    "name": "listId",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of the list that we want to give to another user"
+                }
+            ],
+            "post":{
+                "tags": ["Todos"],
+                "summary": "Create new todo and assign to given List",
+                "description": "Create new todo and assign to given List",
+                "requestBody":{
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "$ref": "#/components/schemas/CreateTodoInput"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "500":{
+                        "description": "Some error in creating todo",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "$ref":"#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200":{
+                        "description": "Created todo",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "$ref":"#/components/schemas/Todo"
+                                }
+                            }
+                        }
+                    },
+                    "403":{
+                        "description": "A token is required for authentication"
+                    }
+                }
+            }
+        },
+        "/todo/edit/{todoId}":{
+            "parameters": [
+                {
+                    "name": "todoId",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID of the todo that we want to edit"
+                }
+            ],
+            "patch":{
+                "tags": ["Todos"],
+                "summary": "Edit todo",
+                "description": "Edit todo",
+                "requestBody":{
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "$ref": "#/components/schemas/EditTodoRequest"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "500":{
+                        "description": "Some error in creating todo",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "$ref":"#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "200":{
+                        "description": "Successfully updated",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "$ref":"#/components/schemas/Todo"
+                                }
+                            }
+                        }
+                    },
+                    "403":{
+                        "description": "A token is required for authentication"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "List": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "User": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "LoginResponse":{
+                "type":"object",
+                "properties":{
+                    "accessToken":{
+                        "type":"string",
+                        "example":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                    },
+                    "user":{
+                        "type": "object",
+                        "$ref":"#/definitions/User"
+                    }
+                }
+            },
+            "List": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UserLists":{
+                "properties": {
+                    "user":{
+                        "$ref":"#/definitions/User"
+                    },
+                    "lists":{
+                        "type": "array",
+                        "items":{
+                            "$ref": "#/definitions/List"
+                        }
+                    }
+                }
+            },
+            "User": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Todo":{
+                "type": "object",
+                "properties": {
+                    "title":{
+                        "type": "string"
+                    },
+                    "text":{
+                        "type": "string"
+                    },
+                    "deadline":{
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "authorId":{
+                        "type": "integer"
+                    },
+                    "flag":{
+                        "type": "string",
+                        "enum": ["ACTIVE","FINISHED","CANCELED"]
+                    }
+                }
+            },
+            "ErrorResponse":{
+                "type": "object",
+                "properties": {
+                    "message":{
+                        "type":"string",
+                        "example": "Some error"
+                    },
+                    "statusCode":{
+                        "type": "number",
+                        "example": 500
+                    }
+                }
+            },
+            "CreateTodoInput":{
+                "type": "object",
+                "properties": {
+                    "title":{
+                        "type": "string"
+                    },
+                    "text":{
+                        "type": "string"
+                    },
+                    "deadline":{
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "flag":{
+                        "type": "string",
+                        "enum": ["ACTIVE","FINISHED","CANCELED"]
+                    }
+                }
+            },
+            "EditTodoRequest":{
+                "type": "object",
+                "properties": {
+                    "flag":{
+                        "type": "string",
+                        "enum": ["ACTIVE","FINISHED","CANCELED"]
+                    }
+                }
+            }
+        }
+    }
+}

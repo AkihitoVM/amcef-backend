@@ -39,16 +39,21 @@ export default () => {
     [verifyToken],
     Todo_Edit_CHECK,
     async (req: Request, res: Response, _next: NextFunction) => {
+      let response:any
       const { todoId } = req.params;
-      const response = await editTodo(
+       response = await editTodo(
         req.body as EditTodoRequest,
         +todoId,
         res.locals.jwtPayload.userId
       );
       if (response) {
-        return res.status(201).send("Successfully updated");
+        return res.status(201).send(response);
       }
-      res.status(500).send("Internal Error");
+      response = {
+        message: "Some error in editing todo",
+        statusCode: 500,
+      }
+      res.status(500).send(response);
     }
   );
 

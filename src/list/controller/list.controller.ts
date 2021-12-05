@@ -23,9 +23,6 @@ export default () => {
       const { name } = req.body;
       const list = await List.create({ name });
       const user = await User.findByPk(res.locals.jwtPayload.userId);
-      console.log(list.toJSON());
-      console.log(user.toJSON());
-      
       list.addUser(user);
       res.send(list);
     }
@@ -80,10 +77,13 @@ export default () => {
         const user = await User.findByPk(userId);
         const list = await List.findByPk(listId);
         await list.addUser(user);
+        return res.status(200).json({
+          message: `User with id=${userId} was successfully added to your list id=${listId}`,
+        });
       }
 
-      res.status(200).json({
-        message: `User with id=${userId} was successfully added to your list id=${listId}`,
+      return res.status(500).json({
+        message: `Internal Error`,
       });
     }
   );
