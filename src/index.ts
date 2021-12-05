@@ -1,7 +1,7 @@
 import express from "express";
 import { Database } from "./models/index";
 import authController from "./user/controller/auth.controller";
-import todoController from "./todo/controller/todo.controller";
+// import todoController from "./todo/controller/todo.controller";
 import listController from "./list/controller/list.controller";
 import * as dotenv from "dotenv";
 import swaggerUi from 'swagger-ui-express'
@@ -13,7 +13,7 @@ server.use(express.json());
 // should be included cors politics?
 
 server.use("/auth", authController());
-server.use("/todo", todoController());
+// server.use("/todo", todoController());
 server.use("/list", listController());
 server.use('/swagger',swaggerUi.serve,swaggerUi.setup(swaggerDocument))
 async function start() {

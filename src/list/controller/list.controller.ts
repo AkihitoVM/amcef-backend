@@ -11,12 +11,13 @@ import {
   List_Get_CHECK,
   List_Patch_CHECK,
 } from "../../utils/validation";
+import todoRouter from '../../todo/controller/todo.controller'
 const router: Router = Router();
-
 export default () => {
+  router.use("/todo", todoRouter())
   // Create new List with some name //
   router.post(
-    "/create",
+    "/",
     [verifyToken],
     List_Create_CHECK,
     async (req: Request, res: Response, _next: NextFunction) => {
@@ -30,7 +31,7 @@ export default () => {
 
   // Get all lists given user //
   router.get(
-    "/all",
+    "/",
     [verifyToken],
     async (req: Request, res: Response, _next: NextFunction) => {
       const userList = await get_All_Lists_Of_Current_User(

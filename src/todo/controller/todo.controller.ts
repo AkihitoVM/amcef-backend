@@ -11,7 +11,7 @@ const router: Router = Router();
 export default () => {
   // Create new todo and assign to given List //
   router.post(
-    "/create/:listId?",
+    "/:listId?",
     [verifyToken],
     Todo_Create_CHECK,
     async (req: Request, res: Response, _next: NextFunction) => {

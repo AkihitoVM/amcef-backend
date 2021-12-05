@@ -97,7 +97,7 @@
                 }
             }
         },
-        "/list/create":{
+        "/list":{
             "post": {
                 "tags": [
                     "Lists"
@@ -133,9 +133,7 @@
                         "description": "Validation Object. Failed. Bad post data."
                     }
                 }
-            }
-        },
-        "/list/all":{
+            },
             "get":{
                 "tags": ["Lists"],
                 "summary": "Get all lists given user",
@@ -219,7 +217,7 @@
                 }
             }
         },
-        "/todo/create/{listId}":{
+        "/list/todo/{listId}":{
             "parameters": [
                 {
                     "name": "listId",
@@ -268,7 +266,7 @@
                 }
             }
         },
-        "/todo/edit/{todoId}":{
+        "/list/todo/edit/{todoId}":{
             "parameters": [
                 {
                     "name": "todoId",
